@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rentopia | User Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #F8F5FC;
+            font-family: Arial, sans-serif;
+            color: #555555;
+        }
+
+        .sidebar {
+            height: 100vh;
+            background-color: #4B2C82;
+            color: white;
+            padding-top: 25px;
+            border-right: 3px solid #F5C542;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            font-weight: 500;
+        }
+
+        .sidebar a:hover {
+            background-color: #F5C542;
+            color: #4B2C82;
+        }
+
+        h2 {
+            color: #4B2C82;
+            font-weight: bold;
+        }
+
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(75, 44, 130, 0.2);
+            border: none;
+        }
+
+        .table thead {
+            background-color: #4B2C82;
+            color: white;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+.sidebar-logo{
+    width:120px;
+    display:block;
+    margin:auto;
+}
+    </style>
+</head>
+
+<body>
+
+<div class="container-fluid">
+<div class="row">
+
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-2 sidebar">
+        <img src="photos/rentopia_logo.png" class="sidebar-logo">
+    	<h5 class="text-center mt-2">Rentopia</h5>
+        <hr class="bg-light">
+        <a href="userd.html">Dashboard</a>
+        <a href="category.html">Browse Rentals</a>
+        <a href="#recentBookings">My Bookings</a>
+        <a href="home.html">Profile</a>
+        <a href="login.html" onclick="logout()">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9 col-lg-10 p-4">
+
+        <h2>Welcome, <span id="username">User</span> 👋</h2>
+        <p class="text-muted">Here is an overview of your activity</p>
+
+        <!-- Stats -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card p-3 text-center">
+                    <h2 id="totalBookings">0</h2>
+                    <h5>Total Bookings</h5>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card p-3 text-center">
+                    <h2 id="totalSpent">₹0</h2>
+                    <h5>Total Spent</h5>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card p-3 text-center">
+                    <h2 id="thisMonthOrders">0</h2>
+                    <h5>This Month Orders</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Bookings -->
+        <div class="card mt-5 p-4" id="recentBookings">
+            <h5>Recent Bookings</h5>
+
+            <table class="table table-striped mt-3">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Total Amount</th>
+                        <th>Payment</th>
+                        <th>Date</th>
+                        <th>Invoice</th>
+                    </tr>
+                </thead>
+                <tbody id="recentOrders"></tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+</div>
+
+<script>
+
+// Get user info
+const userId = localStorage.getItem("userId");
+const username = localStorage.getItem("username");
+
+// Redirect if not logged in
+if (!userId) {
+    window.location.href = "login.html";
+}
+
+// Show username
+document.getElementById("username").innerText = username || "User";
+
+loadDashboard();
+
+function loadDashboard() {
+
+    fetch(`http://localhost:5000/api/user/${userId}/dashboard`)
+    .then(res => res.json())
+    .then(data => {
+
+        if (!data || !data.stats) return;
+
+        // Stats
+        document.getElementById("totalBookings").innerText =
+            data.stats.totalBookings || 0;
+
+        document.getElementById("totalSpent").innerText =
+            "₹" + (data.stats.totalSpent || 0);
+
+        document.getElementById("thisMonthOrders").innerText =
+            data.stats.thisMonthOrders || 0;
+
+        // Recent Orders
+        let ordersHTML = "";
+
+        if (data.recentOrders && data.recentOrders.length > 0) {
+
+            data.recentOrders.forEach(order => {
+
+                ordersHTML += `
+                <tr>
+                    <td>#${order.id}</td>
+                    <td>₹ ${order.grand_total}</td>
+                    <td>${order.payment_method}</td>
+                    <td>${new Date(order.order_date).toLocaleDateString()}</td>
+                    <td>
+                        <a href="bill.html?orderId=${order.id}" 
+                           class="btn btn-sm btn-outline-dark">
+                           View
+                        </a>
+                    </td>
+                </tr>
+                `;
+            });
+
+        } else {
+
+            ordersHTML = `
+                <tr>
+                    <td colspan="5" class="text-center">
+                        No bookings yet
+                    </td>
+                </tr>
+            `;
+        }
+
+        document.getElementById("recentOrders").innerHTML = ordersHTML;
+
+    })
+    .catch(err => {
+        console.error("Dashboard error:", err);
+    });
+}
+
+// Logout function
+function logout() {
+    localStorage.clear();
+}
+
+</script>
+
+</body>
+</html>

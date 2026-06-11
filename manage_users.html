@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rentopia | Manage Users</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+    background-color: #F8F5FC;
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    background-color: #4B2C82;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: bold;
+}
+
+.table th {
+    background-color: #4B2C82;
+    color: white;
+}
+
+.btn-danger {
+    font-size: 12px;
+}
+
+.btn-dark {
+    background-color: #4B2C82;
+    border: none;
+}
+
+.btn-dark:hover {
+    background-color: #F5C542;
+    color: #4B2C82;
+}
+
+.nav-container{
+    width:90%;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+ .logo-area{
+    display:flex;
+    align-items:center;
+}
+
+.logo{
+    height:45px;
+    margin-right:10px;
+}
+
+.brand-text{
+    font-size:22px;
+    font-weight:bold;
+    color:white;
+}
+
+.nav-links a{
+    margin:0 10px;
+    text-decoration:none;
+    color:white;
+    font-weight:500;
+}
+
+.nav-links a:hover{
+    color:#F5C542;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+    
+ 
+   
+<nav class="navbar">
+  <div class="nav-container">
+
+    <div class="logo-area">
+      <img src="photos/rentopia_logo.png" class="logo">
+      <span class="brand-text">Rentopia</span>
+    </div>
+
+    <div class="nav-links">
+      <a href="home.html">Home</a>
+      <a href="category.html">Categories</a>
+      <a href="cart.html">🛒 Cart <span id="cartCount">0</span></a>
+      <a href="login.html">Login</a>
+      <a href="contact.html">Contact</a>
+      <a href="About.html">About Us</a>
+      <a href="admin.html">Admin Dashboard</a>
+    </div>
+
+  </div>
+</nav>
+<!-- Users Table -->
+<div class="container my-5">
+<h2 class="text-center mb-4" style="color:#4B2C82;">Manage Users</h2>
+
+<table class="table table-bordered table-hover text-center">
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Role</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="usersTableBody">
+</tbody>
+
+</table>
+
+</div>
+
+<script>
+
+// 🔒 Admin protection
+const adminRole = localStorage.getItem("userRole");
+
+if (adminRole !== "admin") {
+    window.location.href = "login.html";
+}
+
+// Load Users
+function loadUsers() {
+
+    fetch("http://localhost:5000/users")
+    .then(res => res.json())
+    .then(users => {
+
+        const tableBody = document.getElementById("usersTableBody");
+        tableBody.innerHTML = "";
+
+        users.forEach(user => {
+
+            const row = `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.phone}</td>
+                    <td>${user.role}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm"
+                            onclick="deleteUser(${user.id})">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            `;
+
+            tableBody.innerHTML += row;
+        });
+
+    })
+    .catch(err => console.error("Error loading users:", err));
+}
+
+// Delete User
+function deleteUser(id) {
+
+    if (!confirm("Are you sure you want to delete this user?")) return;
+
+    fetch(`http://localhost:5000/delete-user/${id}`, {
+        method: "DELETE"
+    })
+    .then(res => res.json())
+    .then(() => {
+        loadUsers(); // reload table after delete
+    })
+    .catch(err => console.error("Delete error:", err));
+}
+
+// Load on page open
+loadUsers();
+
+</script>
+
+</body>
+</html>

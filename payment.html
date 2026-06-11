@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rentopia | Payment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #F8F5FC;
+            font-family: Arial, sans-serif;
+            color: #555555;
+        }
+        .navbar {
+            background-color: #4B2C82 !important;
+            border-bottom: 3px solid #F5C542;
+        }
+
+.nav-container{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:1200px;
+    margin:auto;
+    padding:10px 20px;
+}
+
+.logo-area{
+    display:flex;
+    align-items:center;
+}
+
+.logo{
+    height:45px;
+    margin-right:10px;
+}
+
+.brand-text{
+    font-size:22px;
+    font-weight:bold;
+    color:white;
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+}
+
+.nav-links a{
+    margin:0 12px;
+    text-decoration:none;
+    color:white;
+    font-weight:500;
+}
+
+.nav-links a:hover{
+    color:#F5C542;
+}
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+        }
+       .payment-card {
+            max-width: 700px;
+            margin: 60px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(75, 44, 130, 0.25);
+        }
+        .summary-box {
+            background: #fdf6e3;
+            border-left: 5px solid #F5C542;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .btn-success {
+            background-color: #4B2C82;
+            border: none;
+            font-weight: bold;
+        }
+        .btn-success:hover {
+            background-color: #F5C542;
+            color: #4B2C82;
+        }
+        footer {
+            background-color: #4B2C82;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+}
+ .logo-area{
+    display:flex;
+    align-items:center;
+}
+
+.logo{
+    height:45px;
+    margin-right:10px;
+}
+
+.brand-text{
+    font-size:22px;
+    font-weight:bold;
+    color:white;
+}
+
+.nav-links a{
+    margin:0 10px;
+    text-decoration:none;
+    color:white;
+    font-weight:500;
+}
+
+.nav-links a:hover{
+    color:#F5C542;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+    
+ 
+   
+<nav class="navbar">
+  <div class="nav-container">
+
+    <div class="logo-area">
+      <img src="photos/rentopia_logo.png" class="logo">
+      <span class="brand-text">Rentopia</span>
+    </div>
+
+    <div class="nav-links">
+      <a href="home.html">Home</a>
+      <a href="category.html">Categories</a>
+      <a href="cart.html">🛒 Cart <span class="cart-count" id="cartCount">0</span></a>
+      <a href="login.html">Login</a>
+      <a href="contact.html">Contact</a>
+      <a href="About.html">About Us</a>
+      <a href="userd.html">User Dashboard</a>
+    </div>
+
+  </div>
+</nav>
+<div id="paymentSection" class="payment-card">
+
+    <h3 class="text-center text-primary mb-4">Payment</h3>
+
+    <!-- Dynamic Summary -->
+    <div class="summary-box">
+        <h5>Booking Summary</h5>
+        <div id="paymentItems"></div>
+        <hr>
+        <p>Subtotal: ₹<span id="paySubtotal">0</span></p>
+        <p>GST (18%): ₹<span id="payGST">0</span></p>
+        <p>Delivery: ₹<span id="payDelivery">0</span></p>
+        <h5>Total: ₹<span id="payTotal">0</span></h5>
+    </div>
+<form onsubmit="return makePayment()">
+
+    <!-- ADDRESS SECTION -->
+    <h5 class="mb-3 text-primary">Delivery Address</h5>
+
+    <div class="mb-3">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="fullName" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" id="phone" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Address Line</label>
+        <textarea id="addressLine" class="form-control" rows="2" required></textarea>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">City</label>
+            <input type="text" id="city" class="form-control" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">State</label>
+            <input type="text" id="state" class="form-control" required>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <label class="form-label">Pincode</label>
+        <input type="text" id="pincode" class="form-control" required>
+    </div>
+
+    <hr>
+
+    <!-- PAYMENT SECTION -->
+    <h5 class="mb-3 text-primary">Payment Method</h5>
+
+    <div class="mb-3">
+        <label class="form-label">Select Payment Method</label>
+        <select id="paymentMethod" class="form-select" required>
+            <option value="">Choose option</option>
+            <option value="upi">UPI</option>
+            <option value="card">Debit / Credit Card</option>
+            <option value="netbanking">Net Banking</option>
+            <option value="cod">Cash on Delivery</option>
+        </select>
+    </div>
+
+    <div class="d-grid">
+        <button type="submit" class="btn btn-success btn-lg">
+            Confirm Payment
+        </button>
+    </div>
+
+</form>
+
+</div>
+
+<footer>
+    <p>&copy; 2025 Rentopia | All Rights Reserved</p>
+</footer>
+
+<script>
+const currentUser = localStorage.getItem("loggedInUser");
+
+if (!currentUser) {
+    alert("Please login first!");
+    window.location.href = "login.html";
+}
+
+const cartKey = "rentopiaCart_" + currentUser;
+let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+let gstRate = 0.18;
+let deliveryCharge = 200;
+
+function loadPaymentSummary() {
+
+    let container = document.getElementById("paymentItems");
+    let subtotal = 0;
+
+    if (cart.length === 0) {
+        container.innerHTML = "<p>No items in cart.</p>";
+        return;
+    }
+
+    cart.forEach(item => {
+
+        let itemTotal = item.price * item.duration * item.quantity;
+        subtotal += itemTotal;
+
+        container.innerHTML += `
+            <p>
+            <strong>${item.name}</strong><br>
+            ₹${item.price} × ${item.duration} × ${item.quantity}
+            <br>
+            Item Total: ₹${itemTotal}
+            </p>
+            <hr>
+        `;
+    });
+
+    let gst = subtotal * gstRate;
+    let total = subtotal + gst + deliveryCharge;
+
+    document.getElementById("paySubtotal").innerText = subtotal.toFixed(2);
+    document.getElementById("payGST").innerText = gst.toFixed(2);
+    document.getElementById("payDelivery").innerText = deliveryCharge;
+    document.getElementById("payTotal").innerText = total.toFixed(2);
+}
+
+function makePayment() {
+const userId = localStorage.getItem("userId");
+
+if (!userId) {
+    alert("Please login first.");
+    window.location.href = "login.html";
+    return;
+}
+    let name = document.getElementById("fullName").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+    let address = document.getElementById("addressLine").value.trim();
+    let city = document.getElementById("city").value.trim();
+    let state = document.getElementById("state").value.trim();
+    let pincode = document.getElementById("pincode").value.trim();
+    let method = document.getElementById("paymentMethod").value;
+
+    if (!name || !phone || !address || !city || !state || !pincode) {
+        alert("Please fill complete delivery address.");
+        return false;
+    }
+
+    if (method === "") {
+        alert("Please select a payment method!");
+        return false;
+    }
+
+    let subtotal = parseFloat(document.getElementById("paySubtotal").innerText);
+    let gst = parseFloat(document.getElementById("payGST").innerText);
+    let delivery = parseFloat(document.getElementById("payDelivery").innerText);
+    let total = parseFloat(document.getElementById("payTotal").innerText);
+
+    fetch("http://localhost:5000/api/orders", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+    user_id: Number(userId),
+    customer_name: name,
+    phone: phone,
+    address: address,
+    city: city,
+    state: state,
+    pincode: pincode,
+    payment_method: method,
+    subtotal: subtotal,
+    gst: gst,
+    delivery_charge: delivery,
+    grand_total: total,
+    items: cart
+})
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if (data.orderId) {
+
+            localStorage.removeItem(cartKey);
+
+            window.location.href = "bill.html?orderId=" + data.orderId;
+
+        } else {
+            alert("Order failed. Please try again.");
+        }
+
+    })
+    .catch(error => {
+        console.error("Order error:", error);
+        alert("Server error. Try again.");
+    });
+
+    return false;
+}
+loadPaymentSummary();
+</script>
+</body>
+</html>

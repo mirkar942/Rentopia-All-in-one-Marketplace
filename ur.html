@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rentopia | User Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #F8F5FC;
+            font-family: Arial, sans-serif;
+            color: #555555;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #4B2C82 !important;
+            border-bottom: 3px solid #F5C542;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+        }
+
+        /* Register Card */
+        .register-card {
+            max-width: 450px;
+            margin: 80px auto;
+            padding: 35px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(75, 44, 130, 0.25);
+        }
+
+        .register-card h3 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #4B2C82;
+            font-weight: bold;
+        }
+
+        /* Form Labels */
+        .form-label {
+            color: #4B2C82;
+            font-weight: 600;
+        }
+
+        .form-control,
+        .form-select {
+            border: 2px solid #4B2C82;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #F5C542;
+            box-shadow: none;
+        }
+
+        /* Button */
+        .btn-primary {
+            background-color: #4B2C82;
+            border: none;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background-color: #F5C542;
+            color: #4B2C82;
+        }
+
+        /* Links */
+        a {
+            color: #4B2C82;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #F5C542;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #4B2C82;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+        }
+
+
+.logo{
+    height:45px;          /* controls navbar height */
+    width:auto;
+    margin-right:12px;
+    transform: scale(1.7);   /* increases visual size */
+    transform-origin: left center;
+}
+
+
+.brand-text{
+    font-size:22px;
+    font-weight:bold;
+    color:white;
+}
+
+.nav-link{
+    color:white !important;
+    font-weight:500;
+}
+
+.nav-link:hover{
+    color:#F5C542 !important;
+}
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+
+<nav class="navbar navbar-expand-lg">
+<div class="container">
+
+<a class="navbar-brand d-flex align-items-center" href="home.html">
+<img src="photos/rentopia_logo.png" class="logo">
+<span class="brand-text">Rentopia</span>
+</a>
+
+<div class="ms-auto d-flex align-items-center">
+<a class="nav-link d-inline mx-3" href="home.html">Home</a>
+<a class="nav-link d-inline mx-3" href="category.html">Categories</a>
+<a class="nav-link d-inline mx-3" href="ur.html">Register</a>
+<a class="nav-link d-inline mx-3" href="contact.html">Contact</a>
+<a class="nav-link d-inline mx-3" href="About.html">About Us</a>
+</div>
+
+</div>
+</nav>
+<div class="register-card">
+    <h3>Create Account</h3>
+
+    <form id="registerForm">
+
+
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="name" class="form-control" placeholder="Enter your name">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" id="email" class="form-control" placeholder="Enter email">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" id="phone" class="form-control" placeholder="Enter phone number">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="Enter password">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Register As</label>
+            <select id="role" class="form-select">
+                <option value="">Select role</option>
+                <option value="user">User</option>
+                <option value="vendor">Vendor</option>
+            </select>
+        </div>
+
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">
+                Register
+            </button>
+        </div>
+
+        <p class="text-center mt-3">
+            Already have an account? <a href="login.html">Login</a>
+        </p>
+    </form>
+</div>
+
+<footer>
+    <p>&copy; 2025 Rentopia | All Rights Reserved</p>
+</footer>
+
+<!-- JavaScript Validation -->
+<script>
+document.getElementById("registerForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    let name = document.getElementById("name").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+    let password = document.getElementById("password").value;
+    let role = document.getElementById("role").value;
+
+    if (!name || !email || !phone || !password || !role) {
+        alert("All fields are required!");
+        return;
+    }
+
+    // ✅ Strong Password Validation
+    let passwordRegex = /^(?=.*[a-z])(?=.*[0-9]).{6,}$/;
+
+    if (!passwordRegex.test(password)) {
+        alert("Password must be at least 6 characters long and include at least one lowercase letter and one number!");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:5000/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name, email, phone, password, role })
+        });
+
+        const data = await response.json();
+        alert(data.message);
+
+        if (data.message === "Registration successful") {
+            window.location.href = "login.html";
+        }
+
+    } catch (error) {
+        alert("Error connecting to server");
+    }
+});
+</script>
+</body>
+</html>

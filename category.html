@@ -1,0 +1,383 @@
+
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rentopia | Categories</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 0; background-color: #F8F5FC; color: #555555; }
+
+/* Header */
+header { background: linear-gradient(to right, #6A11CB, #F5C542); color: white; text-align: center; padding: 40px 20px; }
+header h1 { font-size: 2.8rem; font-weight: bold; }
+
+/* Navbar */
+nav { background-color: #4B2C82; text-align: center; padding: 12px; border-bottom: 3px solid #F5C542; }
+nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: 500; }
+nav a:hover { color: #F5C542; text-decoration: underline; }
+
+/* Layout */
+.container { display: flex; width: 100%; }
+/* --- Sidebar Enhancements --- */
+.sidebar {
+  width: 220px;
+  background: linear-gradient(to bottom, #4B2C82, #6A11CB);
+  padding: 20px;
+  border-right: 3px solid #F5C542;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  transition: all 0.3s;
+}
+
+/* Sidebar Header */
+.sidebar h3 {
+  color: #F5C542;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+/* Category links */
+.sidebar a {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  margin: 8px 0;
+  background: white;
+  color: #4B2C82;
+  border-radius: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s;
+  font-size: 1rem;
+}
+
+/* Add emoji/icon spacing */
+.sidebar a::before {
+  content: attr(data-icon);
+  margin-right: 10px;
+}
+
+/* Hover effect */
+.sidebar a:hover {
+  background: linear-gradient(90deg, #F5C542, #6A11CB);
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+/* Active category */
+.sidebar a.active {
+  background: #F5C542;
+  color: #2D1B4E;
+  font-weight: bold;
+}
+
+/* Custom scrollbar */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #F5C542;
+  border-radius: 3px;
+}
+/* Content */
+.content { flex:1; padding: 25px; }
+
+/* Section Card */
+.menu-section { margin: 30px auto; padding: 25px; background: white; border-radius: 12px; box-shadow: 0 6px 18px rgba(75,44,130,0.25); }
+.menu-section h2 { text-align: center; color: #4B2C82; margin-bottom: 20px; }
+
+/* Grid & Cards */
+.menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+.menu-item { background: #fff; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); overflow: hidden; cursor: pointer; transition: 0.3s; text-align:center; }
+.menu-item:hover { transform: translateY(-6px); }
+.menu-item img { width:100%; height:230px; object-fit:cover; }
+.menu-item h3 { padding: 10px; font-size:18px; }
+.price { padding: 0 10px; font-weight: bold; color: #e91e63; }
+.add-btn { margin: 10px; padding: 8px 12px; border:none; background: linear-gradient(45deg,#e91e63,#ff5722); color:white; border-radius:8px; cursor:pointer; transition:0.3s; }
+.add-btn:hover { transform: scale(1.05); }
+
+/* Modal */
+.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:999; }
+.modal-content { background:white; width:85%; max-width:900px; border-radius:20px; display:flex; overflow:hidden; }
+.modal img { width:50%; object-fit:cover; }
+.modal-details { padding:30px; flex:1; }
+.close { position:absolute; right:30px; top:20px; font-size:28px; cursor:pointer; color:white; }
+.stars { color: gold; margin:10px 0; }
+
+/* Search */
+.search-container { text-align:center; margin:20px 0; }
+.search-container input { width:300px; padding:10px; border:2px solid #4B2C82; border-radius:6px; }
+.search-container button { padding:10px 15px; background:#4B2C82; color:white; border:none; border-radius:6px; margin-left:8px; cursor:pointer; }
+.search-container button:hover { background:#F5C542; color:#2D1B4E; }
+
+/* Footer */
+footer { background-color:#4B2C82; color:white; text-align:center; padding:15px; }
+.cart-count { background:red; color:white; padding:3px 8px; border-radius:50%; font-size:12px; }
+
+.nav-container{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:1200px;
+    margin:auto;
+}
+
+.logo-area{
+    display:flex;
+    align-items:center;
+}
+
+.logo{
+    height:45px;
+    margin-right:10px;
+}
+
+.brand-text{
+    font-size:22px;
+    font-weight:bold;
+    color:white;
+}
+
+.nav-links a{
+    color:white;
+    margin:0 10px;
+    text-decoration:none;
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-container">
+
+    <div class="logo-area">
+      <img src="photos/rentopia_logo.png" class="logo">
+      <span class="brand-text">Rentopia</span>
+    </div>
+
+    <div class="nav-links">
+      <a href="home.html">Home</a>
+      <a href="category.html">Categories</a>
+      <a href="cart.html">🛒 Cart <span class="cart-count" id="cartCount">0</span></a>
+      <a href="login.html">Login</a>
+      <a href="ur.html">Register</a>
+      <a href="contact.html">Contact</a>
+      <a href="About.html">About Us</a>
+      <a href="userd.html">User Dashboard</a>
+    </div>
+
+  </div>
+</nav>
+
+<div class="search-container">
+  <input type="text" id="searchInput" placeholder="Search Item...">
+  <button onclick="searchItems()">🔍 Search</button>
+</div>
+
+<div class="container">
+  <aside class="sidebar" id="sidebarCategories">
+    <h3>Categories</h3>
+  </aside>
+
+  <main class="content" id="mainContent">
+    <!-- Dynamic content injected here -->
+  </main>
+</div>
+
+<footer>
+  <p>&copy; 2025 Rentopia. All rights reserved.</p>
+</footer>
+
+<!-- Modal -->
+<div class="modal" id="productModal">
+  <span class="close" onclick="closeModal()">×</span>
+  <div class="modal-content">
+    <img id="modalImage">
+    <div class="modal-details">
+      <h2 id="modalName"></h2>
+      <p id="modalVendor"></p>
+      <div class="stars" id="modalRating"></div>
+      <h3 id="modalPrice"></h3>
+      <p class="availability">✔ Available</p>
+      <div class="input-row">
+        <label>Booking Type:</label>
+        <select id="rentalType">
+          <option value="day">Per Day</option>
+          <option value="hour">Per Hour</option>
+        </select>
+      </div>
+      <div class="input-row">
+        <label>Rental Days:</label>
+        <input type="number" id="rentalDays" value="1" min="1">
+      </div>
+      <div class="input-row">
+        <label>Quantity:</label>
+        <input type="number" id="quantity" value="1" min="1">
+      </div>
+      <p class="total-display">Total: ₹<span id="totalAmount">0</span></p>
+      <button id="modalAddBtn" class="add-btn">Rent Now</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function getCurrentUser() {
+    const user = localStorage.getItem("loggedInUser");
+    if (!user || user === "null" || user === "undefined") {
+        return null;
+    }
+    return user;
+}
+if (!getCurrentUser()) {
+    alert("Please login first!");
+    window.location.href = "login.html";
+}
+
+// Fetch categories dynamically from backend
+const mainContent = document.getElementById("mainContent");
+const sidebar = document.getElementById("sidebarCategories");
+
+fetch("http://localhost:5000/api/products/categories")
+.then(res => res.json())
+.then(categories => {
+
+
+// Map categories to icons (you can replace with any emojis or icon characters)
+const categoryIcons = {
+  "Accessories": "👜",
+  "Bollywood": "🎬",
+  "Bridal": "👰",
+  "Decorations": "🎉",
+  "Event Essentials": "💡",
+  "Festive": "🪔",
+  "Furniture": "🛋️",
+  "Props": "📦",
+  "Tools": "🛠️"
+};
+  // Render sidebar
+  sidebar.innerHTML = '<h3>Categories</h3>';
+  for (let cat in categories){
+    const a = document.createElement("a");
+    a.href = "#"+cat.toLowerCase();
+    a.textContent = cat;
+    // Add data-icon for CSS ::before
+    a.setAttribute("data-icon", categoryIcons[cat] || "📁");
+    sidebar.appendChild(a);
+  }
+  // Render content
+  mainContent.innerHTML = "";
+  for (let cat in categories){
+    const section = document.createElement("div");
+    section.className = "menu-section";
+    section.id = cat.toLowerCase();
+    section.innerHTML = `<h2>${cat}</h2><div class="menu-grid"></div>`;
+    const grid = section.querySelector(".menu-grid");
+
+    categories[cat].forEach(item=>{
+      const card = document.createElement("div");
+      card.className="menu-item";
+      card.onclick = ()=>openModal(item);
+      card.innerHTML=`
+        <img src="${item.image}" alt="${item.name}">
+        <h3>${item.name}</h3>
+        <p class="price">₹${item.price} / day</p>
+        <button class="add-btn" onclick="event.stopPropagation(); addToCart('${item.name}',${item.price},'${item.image}, this)">Rent Now</button>
+      `;
+      grid.appendChild(card);
+    });
+
+    mainContent.appendChild(section);
+  }
+
+})
+.catch(err => console.error("Error loading categories:", err));
+// MODAL
+function openModal(item){
+  document.getElementById("modalImage").src = item.image;
+  document.getElementById("modalName").innerText = item.name;
+  document.getElementById("modalVendor").innerText = "Vendor: "+item.vendor;
+  document.getElementById("modalPrice").innerText = "₹"+item.price+" / day";
+  document.getElementById("rentalDays").value = 1;
+  document.getElementById("quantity").value = 1;
+  document.getElementById("totalAmount").innerText = item.price;
+
+  let stars = "";
+  for(let i=1;i<=5;i++) stars += i<=Math.round(item.rating)?"★":"☆";
+  document.getElementById("modalRating").innerText = stars + " (" + item.rating + ")";
+
+  document.getElementById("rentalDays").oninput = updateTotal;
+  document.getElementById("quantity").oninput = updateTotal;
+
+  function updateTotal(){
+    let days = parseInt(document.getElementById("rentalDays").value);
+    let qty = parseInt(document.getElementById("quantity").value);
+    document.getElementById("totalAmount").innerText = item.price*days*qty;
+  }
+
+  document.getElementById("modalAddBtn").onclick = ()=>{ addToCart(item.name,item.price); closeModal(); };
+  document.getElementById("productModal").style.display="flex";
+}
+function closeModal(){ document.getElementById("productModal").style.display="none"; }
+
+function isLoggedIn() {
+    return !!localStorage.getItem("loggedInUser");
+}
+
+function addToCart(name, price, image){
+
+  const currentUser = getCurrentUser();
+
+  if (!currentUser) {
+      alert("Please login first!");
+      window.location.href = "login.html";
+      return;
+  }
+
+  let rentalType = document.getElementById("rentalType")?.value || "day";
+
+  let duration = parseInt(document.getElementById("rentalDays")?.value) || 1;
+
+  let quantity = parseInt(document.getElementById("quantity")?.value) || 1;
+
+  const cartKey = "rentopiaCart_" + currentUser;
+
+  let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+ cart.push({ name, price, image, type: rentalType, duration, quantity });
+  localStorage.setItem(cartKey, JSON.stringify(cart));
+
+  document.getElementById("cartCount").innerText = cart.length;
+
+  alert("Added to Cart!");
+}
+// Load cart count on page load
+if (!getCurrentUser()) {
+    alert("Please login first!");
+    window.location.href = "login.html";
+}
+
+// SEARCH
+function searchItems(){
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  document.querySelectorAll(".menu-item").forEach(card=>{
+    card.style.display = card.innerText.toLowerCase().includes(query)?"block":"none";
+  });
+}
+document.getElementById("searchInput").addEventListener("input", searchItems);
+
+function logout(){
+    localStorage.removeItem("userId");
+    localStorage.removeItem("username");
+    window.location.href = "login.html";
+}
+</script>
+</body>
+</html>

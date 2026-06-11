@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rentopia | Vendor Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #F8F5FC;
+            font-family: Arial, sans-serif;
+            color: #555555;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            height: 100vh;
+            background-color: #4B2C82;
+            color: white;
+            padding-top: 25px;
+            border-right: 3px solid #F5C542;
+        }
+
+        .sidebar h4 {
+            font-weight: bold;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            font-weight: 500;
+        }
+
+        .sidebar a:hover {
+            background-color: #F5C542;
+            color: #4B2C82;
+        }
+
+        /* Headings */
+        h2 {
+            color: #4B2C82;
+            font-weight: bold;
+        }
+
+        /* Cards */
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(75, 44, 130, 0.2);
+            border: none;
+        }
+
+        .card h6 {
+            color: #4B2C82;
+            font-weight: 600;
+        }
+
+        /* Table */
+        .table thead {
+            background-color: #4B2C82;
+            color: white;
+        }
+
+        /* Custom Badges */
+        .badge-active {
+            background-color: #4B2C82;
+        }
+
+        .badge-completed {
+            background-color: #F5C542;
+            color: #4B2C82;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 sidebar">
+            <h4 class="text-center">Vendor Panel</h4>
+            <hr class="bg-light">
+            <a href="#">Dashboard</a>
+            <a href="#">Add Product</a>
+            <a href="#">My Products</a>
+            <a href="#">Bookings</a>
+            <a href="#">Earnings</a>
+            <a href="#">Profile</a>
+            <a href="login.html">Logout</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10 p-4">
+
+           <h2>Welcome, <span id="vendorName"></span> 👋</h2>
+            <p class="text-muted">Manage your listings and bookings</p>
+
+            <!-- Stats Cards -->
+          <h2 class="fw-bold" id="totalProducts">0</h2>
+<h2 class="fw-bold" id="activeBookings">0</h2>
+<h2 class="fw-bold" id="completedOrders">0</h2>
+<h2 class="fw-bold" id="totalEarnings">₹0</h2>
+
+            <!-- Recent Bookings -->
+            <div class="card mt-4 p-4">
+                <h5>Recent Bookings</h5>
+
+                <table class="table table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Customer</th>
+                            <th>Dates</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                  <tbody id="recentBookings"></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+const vendorId = localStorage.getItem("vendorId");
+const vendorName = localStorage.getItem("vendorName");
+
+if (!vendorId) {
+    window.location.href = "vendord.html";
+}
+
+document.getElementById("vendorName").innerText = vendorName || "Vendor";
+
+fetch(`http://localhost:5000/api/vendor/${vendorId}/dashboard`)
+.then(res => res.json())
+.then(data => {
+
+    // Stats
+    document.getElementById("totalProducts").innerText = data.stats.totalProducts || 0;
+    document.getElementById("activeBookings").innerText = data.stats.activeBookings || 0;
+    document.getElementById("completedOrders").innerText = data.stats.completedOrders || 0;
+    document.getElementById("totalEarnings").innerText = "₹" + (data.stats.totalEarnings || 0);
+
+    // Table
+    let html = "";
+
+    data.bookings.forEach(b => {
+
+        let badgeClass = b.status === "Active" 
+            ? "badge-active" 
+            : "badge-completed";
+
+        html += `
+        <tr>
+            <td>${b.item}</td>
+            <td>${b.customer}</td>
+            <td>${new Date(b.order_date).toLocaleDateString()}</td>
+            <td><span class="badge ${badgeClass}">${b.status}</span></td>
+        </tr>
+        `;
+    });
+
+    document.getElementById("recentBookings").innerHTML = html;
+
+})
+.catch(err => console.error("Vendor dashboard error:", err));
+
+</script>
+
+</body>
+</html>

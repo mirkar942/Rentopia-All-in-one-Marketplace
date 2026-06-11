@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rentopia | Manage Vendors</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+    background-color: #F8F5FC;
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    background-color: #4B2C82;
+}
+
+.navbar-brand {
+    color: white !important;
+    font-weight: bold;
+}
+
+.table th {
+    background-color: #4B2C82;
+    color: white;
+}
+
+.btn-dark {
+    background-color: #4B2C82;
+    border: none;
+}
+
+.btn-dark:hover {
+    background-color: #F5C542;
+    color: #4B2C82;
+}
+.nav-container{
+    width:90%;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+ .logo-area{
+    display:flex;
+    align-items:center;
+}
+
+.logo{
+    height:45px;
+    margin-right:10px;
+}
+
+.brand-text{
+    font-size:22px;
+    font-weight:bold;
+    color:white;
+}
+
+.nav-links a{
+    margin:0 10px;
+    text-decoration:none;
+    color:white;
+    font-weight:500;
+}
+
+.nav-links a:hover{
+    color:#F5C542;
+}
+
+.status-active { background-color: #198754; }
+.status-pending { background-color: #ffc107; color: black; }
+.status-blocked { background-color: #dc3545; }
+</style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+   
+<nav class="navbar">
+  <div class="nav-container">
+
+    <div class="logo-area">
+      <img src="photos/rentopia_logo.png" class="logo">
+      <span class="brand-text">Rentopia</span>
+    </div>
+
+    <div class="nav-links">
+      <a href="home.html">Home</a>
+      <a href="category.html">Categories</a>
+      <a href="cart.html">🛒 Cart <span id="cartCount">0</span></a>
+      <a href="login.html">Login</a>
+      <a href="contact.html">Contact</a>
+      <a href="About.html">About Us</a>
+      <a href="admin.html">Admin Dashboard</a>
+    </div>
+
+  </div>
+</nav>
+<!-- Vendors Table -->
+<div class="container my-5">
+<h2 class="text-center mb-4" style="color:#4B2C82;">Manage Vendors</h2>
+
+<table class="table table-bordered table-hover text-center">
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Business Name</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td>Priya Mehta</td>
+<td>priya@gmail.com</td>
+<td>9123456780</td>
+<td>Priya Bridal Studio</td>
+<td><span class="badge status-active">Active</span></td>
+<td>
+<button class="btn btn-warning btn-sm" onclick="toggleStatus(this)">Block</button>
+<button class="btn btn-danger btn-sm" onclick="removeRow(this)">Delete</button>
+</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>Vikram Singh</td>
+<td>vikram@gmail.com</td>
+<td>9870011223</td>
+<td>Royal Furniture Rentals</td>
+<td><span class="badge status-pending">Pending</span></td>
+<td>
+<button class="btn btn-success btn-sm" onclick="approveVendor(this)">Approve</button>
+<button class="btn btn-danger btn-sm" onclick="removeRow(this)">Delete</button>
+</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>Anjali Kapoor</td>
+<td>anjali@gmail.com</td>
+<td>9988776655</td>
+<td>Event Magic Decor</td>
+<td><span class="badge status-blocked">Blocked</span></td>
+<td>
+<button class="btn btn-success btn-sm" onclick="toggleStatus(this)">Unblock</button>
+<button class="btn btn-danger btn-sm" onclick="removeRow(this)">Delete</button>
+</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>Rahul Verma</td>
+<td>rahul@gmail.com</td>
+<td>9011223344</td>
+<td>Luxury Tool Rentals</td>
+<td><span class="badge status-active">Active</span></td>
+<td>
+<button class="btn btn-warning btn-sm" onclick="toggleStatus(this)">Block</button>
+<button class="btn btn-danger btn-sm" onclick="removeRow(this)">Delete</button>
+</td>
+</tr>
+
+</tbody>
+</table>
+
+</div>
+
+<script>
+function removeRow(button) {
+    if(confirm("Are you sure you want to delete this vendor?")) {
+        button.closest("tr").remove();
+    }
+}
+
+function approveVendor(button) {
+    let row = button.closest("tr");
+    let statusBadge = row.querySelector(".badge");
+    statusBadge.className = "badge status-active";
+    statusBadge.innerText = "Active";
+    button.remove();
+}
+
+function toggleStatus(button) {
+    let row = button.closest("tr");
+    let statusBadge = row.querySelector(".badge");
+
+    if(statusBadge.innerText === "Active") {
+        statusBadge.className = "badge status-blocked";
+        statusBadge.innerText = "Blocked";
+        button.innerText = "Unblock";
+        button.classList.remove("btn-warning");
+        button.classList.add("btn-success");
+    } else {
+        statusBadge.className = "badge status-active";
+        statusBadge.innerText = "Active";
+        button.innerText = "Block";
+        button.classList.remove("btn-success");
+        button.classList.add("btn-warning");
+    }
+}
+</script>
+
+</body>
+</html>
